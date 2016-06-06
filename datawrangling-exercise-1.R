@@ -1,7 +1,7 @@
 # Springboard Data Wrangling Exercise 1 - John Roberts
 
-install.packages("dplyr")
-install.packages("tidyr")
+#install.packages("dplyr")
+#install.packages("tidyr")
 library(dplyr)
 library(tidyr)
 
@@ -13,7 +13,7 @@ products <- read.csv("refine_original.csv", stringsAsFactors = FALSE)
 products <- products %>% 
   mutate(company=ifelse(grepl("^phil|^fil|^phl", company, ignore.case=TRUE), "phillips", company)) %>%
   mutate(company=ifelse(grepl("^ak", company, ignore.case=TRUE), "akzo", company)) %>%
-  mutate(company=ifelse(grepl("^van", company, ignore.case=TRUE), "van houten", company)) %>%
+  mutate(company=ifelse(grepl("^van", company, ignore.case=TRUE), "van_houten", company)) %>%
   mutate(company=ifelse(grepl("^Uni", company, ignore.case=TRUE), "unilever", company)) %>%
   mutate(company = factor(company))
 
@@ -34,7 +34,19 @@ products <- products %>%
   unite("full_address", address:country, sep=", ", remove=TRUE)
 
 
-#5: Create dummy variables for company and product category
-#Both the company name and product category are categorical variables i.e. they take only a fixed set of values. In order to use them in further analysis you need to create dummy variables. Create dummy binary variables for each of them with the prefix company_ and product_ i.e.
-#Add four binary (1 or 0) columns for company: company_philips, company_akzo, company_van_houten and company_unilever
-#Add four binary (1 or 0) columns for product category: product_smartphone, product_tv, product_laptop and product_tablet
+#5: Create dummy binary variables for company and product category
+
+products <- products %>% 
+  mutate(company_phillips = ifelse(company == "phillips", 1, 0)) %>% 
+  mutate(company_akzo = ifelse(company == "akzo", 1, 0)) %>% 
+  mutate(company_van_houten = ifelse(company == "van_houten", 1, 0)) %>% 
+  mutate(company_unilever = ifelse(company == "unilever", 1, 0))
+
+
+products <- products %>% 
+  mutate(category_laptop = ifelse(product_category == "Laptop", 1, 0)) %>% 
+  mutate(category_smartphone = ifelse(product_category == "Smartphone", 1, 0)) %>% 
+  mutate(category_tablet = ifelse(product_category == "Tablet", 1, 0)) %>% 
+  mutate(category_tv = ifelse(product_category == "TV", 1, 0))
+
+
